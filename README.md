@@ -1,15 +1,22 @@
 # 这里是 Fuse
-
 SPDPO 服务器就是个 🥔
 # 运行 Fuse 
+首先把整个文件夹git到本地  
 
-Fuse 现只支持 
-Google Chrome	99.0.4844.51 (Official Build) (64-bit)
+**需要将chromedriver与fuse.py放在一个目录下**    
 
-在Chronme浏览器地址栏中输入 chrome://version/ 即可查看当前版本
+_Fuse 现只支持     
+Google Chrome	99.0.4844.51 (Official Build) (64-bit)_
+
+
+
+需要安装相关支持库  
+`pip install selenium`   
+`pip install bs4`
+
+
 
 # Fuse 支持
-Fuse 0.1 仅为测试版本，仍存在一些问题
 
 如果发现bug的话欢迎 pull request 和发 issue 🎈
 
