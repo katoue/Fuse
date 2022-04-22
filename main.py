@@ -1,127 +1,113 @@
-import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import re
-from bs4 import BeautifulSoup
-import datetime
 import time
 import base64
+from bs4 import BeautifulSoup
+import re
+import os
+import datetime
 
+lag = 1
+guard = 0
+times = 50
+try:
+    driver = webdriver.Chrome()
+except:
+    input(print('ooops，浏览器和驱动不匹配或未安装...'))
+print('欢迎使用Fuse1.0 ')
 
-def format1(sample):
-    guard = 0
-    currenttime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    for i in sample:
-        if i[-2:] == '00':
-            temph = int(i[-5:-3])
-            temph = temph - 1
-            if len(str(temph)) == 1:
-                temph = '0' + str(temph)
-            else:
-                temph = str(temph)
-            temp = i[-16:-12] + i[-11:-9] + i[-8:-6] + temph + '59' + str(60 - lag)
-        else:
-            tempm = int(i[-2:])
-            tempm = str(tempm - 1)
-            if len(str(tempm)) == 1:
-                tempm = '0' + str(tempm)
-            else:
-                tempm = str(tempm)
-            temp = i[-16:-12] + i[-11:-9] + i[-8:-6] + i[-5:-3] + tempm + str(60 - lag)
-        if int(currenttime) > int(temp):
-            sample[guard] = '99999999999999'
-        else:
-            sample[guard] = temp
-        guard = guard + 1
-
-    return sample
-
-
-def refresh():
-    global soup, startList, linkList
-    driver.get('https://spdpo.nottingham.edu.cn/study/selection')
-    content = driver.page_source
-    soup = BeautifulSoup(content, features="html.parser")
-    soup = str(soup)
-    start_pattern = re.compile('报名开始时间：.{16}')
-    end_pattern = re.compile('报名结束时间：.{16}')
-    place_pattern = re.compile('地点.*</div>')
-    link_pattern = re.compile('/study/selection/activitydetail/.{36}')
-    linkList_temp = link_pattern.findall(soup)
-    linkList = []
-    for i in linkList_temp:
-        linkList.append("https://spdpo.nottingham.edu.cn" + i)
-    startList_temp = start_pattern.findall(soup)
-    startList = format1(startList_temp)
-
-
-def main(link):
-    guard = 0
-    driver.get(link)
-    while 1 > 0:
-        time.sleep(0.8)
-        driver.execute_script('onSelection()')
-        driver.implicitly_wait(10)
-        driver.find_element(By.XPATH,
-                            '//*[@id="layui-m-layer' + str(guard) + '"]/div[2]/div/div/div[2]/span[2]').click()
-        guard += 3
-
-
-
-def trigger():
-    while 1 > 0:
-        currenttime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-        guard = 0
-        for i in startList:
-            if int(currenttime) >= int(i):
-                main(linkList[guard])
-        time.sleep(1)
-
-
-lag = 10
-account = ''
-psword = ''
 
 def log():
     global account, psword
-    print('Version:Fuse0.1 Github repo:')
+
     if os.path.exists('Fuse_config.json'):
         f = open('Fuse_config.json', 'r')
         psword = base64.b64decode(f.readline()).decode()
         account = base64.b64decode(f.readline()).decode()
+        use = input('使用保存的账号？[' + account+'](y/n)\n')
 
+        if use == 'y' or use == 'Y':
+            pass
+        else:
+            os.remove('Fuse_config.json')
+            log()
     else:
         account = str(input('账号plz\n'))
         psword = str(input('密码plz\n'))
-        yn = input('保存密码？(y/n)#\n注意：Fuse仅会在本地进行简单加密，请勿在公共电脑使用此项功能\n')
+        yn = input('保存密码？(y/n)\n')
         if yn == 'y' or yn == 'Y':
             print('正在保存密码...')
             try:
                 byte_account = account.encode()
                 byte_psword = psword.encode()
                 f = open('Fuse_config.json', 'w')
-                f.write(base64.b64encode(byte_psword).decode()+'\n'+base64.b64encode(byte_account).decode())
+                f.write(base64.b64encode(byte_psword).decode() + '\n' + base64.b64encode(byte_account).decode())
                 f.close()
+                print('保存成功，正在打开浏览器...')
             except:
                 print('保存失败...')
+        else:
+            pass
 
 
-
+def format1(sample):
+    sample = str(sample)
+    if sample[-2:] == '00':
+        temph = int(sample[-5:-3])
+        temph = temph - 1
+        if len(str(temph)) == 1:
+            temph = '0' + str(temph)
+        else:
+            temph = str(temph)
+        temp = sample[-16:-12] + sample[-11:-9] + sample[-8:-6] + temph + '59' + str(60 - lag)
+    else:
+        tempm = int(sample[-2:])
+        tempm = str(tempm - 1)
+        if len(str(tempm)) == 1:
+            tempm = '0' + str(tempm)
+        else:
+            tempm = str(tempm)
+        temp = sample[-16:-12] + sample[-11:-9] + sample[-8:-6] + sample[-5:-3] + tempm + str(60 - lag)
+    return temp
 
 
 log()
-driver = webdriver.Chrome()
 driver.get("https://spdpo.nottingham.edu.cn/study/auth/Index?a=true")
-driver.implicitly_wait(999)
+driver.implicitly_wait(10)
+print('Logging....')
 driver.find_element(By.XPATH, '//*[@id="UserName"]').send_keys(account)
 driver.find_element(By.XPATH, '//*[@id="Password"]').send_keys(psword)
 driver.find_element(By.ID, 'btnLogin').click()
+driver.get('https://spdpo.nottingham.edu.cn/study/selection')
+url = input('右键目标课程按钮并复制链接粘贴到此处\n')
+param = url[-36:]
+print(param)
+driver.get(url)
+driver.implicitly_wait(5)
+content = driver.page_source
+soup = BeautifulSoup(content, features="html.parser")
+soup = str(soup)
+start_pattern = re.compile('divRegStart">.{16}')
+end_pattern = re.compile('报名结束时间：.{16}')
+place_pattern = re.compile('地点.*</div>')
+start = start_pattern.search(soup)
+end = end_pattern.search(soup)
+place = place_pattern.search(soup)
+print(start)
+start = format1(start.group())
 
+print('已找到课程')
+currenttime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+while int(start) > int(currenttime):
+    currenttime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    print('Fuse Countdown:' + str(int(start) - int(currenttime)) + '...')
+    time.sleep(1)
 
-refresh()
-trigger()
+while guard <= times:
+    print('---------------Fusing---------------')
+    driver.execute_script(
+        '$.post(\"/study/Selection/StudentSelection\", {ScheduleId: ' + '\'' + param[-36:] + '\',}, null, "json")')
+    time.sleep(0.3)
 
-
-'''driver.execute_script('onSelection()')
-driver.find_element(By.XPATH,'//*[@id="layui-m-layer0"]/div[2]/div/div/div[2]/span[2]').click()'''
-# 2022-03-10 10:00
+input('Fuse finished, press Enter to exit...')
+driver.close()
