@@ -14,6 +14,7 @@ try:
     driver = webdriver.Chrome()
 except:
     input(print('ooops，浏览器和驱动不匹配或未安装...'))
+    sys.exit()
 print('欢迎使用Fuse1.0 ')
 
 
@@ -111,3 +112,4 @@ while guard <= times:
 
 input('Fuse finished, press Enter to exit...')
 driver.close()
+sys.exit()
