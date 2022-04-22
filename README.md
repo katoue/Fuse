@@ -1,6 +1,4 @@
 # 这里是 Fuse
-Fuck SPDPO！
-💩💩💩💩💩💩💩💩💩💩💩💩💩💩💩💩💩 
 
 SPDPO 服务器就是个 🥔
 # 运行 Fuse 
