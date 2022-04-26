@@ -4,9 +4,9 @@ SPDPO 服务器就是个 🥔
 _Fuse 现只支持 Google Chrome_  
 
 **需要的环境**  
-`python 3` https://www.python.org/
-`Chrome浏览器` https://www.google.cn/intl/zh-CN/chrome
-`chromedriver` http://chromedriver.storage.googleapis.com/index.html
+`python 3` https://www.python.org/  
+`Chrome浏览器` https://www.google.cn/intl/zh-CN/chrome  
+`chromedriver` http://chromedriver.storage.googleapis.com/index.html  
 
 **需要将chromedriver与fuse.py放在一个目录下**    
 
