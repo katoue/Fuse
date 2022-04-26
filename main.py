@@ -6,16 +6,17 @@ from bs4 import BeautifulSoup
 import re
 import os
 import datetime
+import sys
 
-lag = 1
+lag = 2
 guard = 0
-times = 50
+times = 40
 try:
     driver = webdriver.Chrome()
 except:
     input(print('ooops，浏览器和驱动不匹配或未安装...'))
     sys.exit()
-print('欢迎使用Fuse1.0 ')
+print('欢迎使用Fuse1.0,仅用于学习测试用途')
 
 
 def log():
@@ -82,7 +83,6 @@ driver.find_element(By.ID, 'btnLogin').click()
 driver.get('https://spdpo.nottingham.edu.cn/study/selection')
 url = input('右键目标课程按钮并复制链接粘贴到此处\n')
 param = url[-36:]
-print(param)
 driver.get(url)
 driver.implicitly_wait(5)
 content = driver.page_source
@@ -102,7 +102,7 @@ currenttime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 while int(start) > int(currenttime):
     currenttime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     print('Fuse Countdown:' + str(int(start) - int(currenttime)) + '...')
-    time.sleep(1)
+    time.sleep(1.5)
 
 while guard <= times:
     print('---------------Fusing---------------')
