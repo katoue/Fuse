@@ -106,6 +106,7 @@ while int(start) > int(currenttime):
 
 while guard <= times:
     print('---------------Fusing---------------')
+    guard += 1
     driver.execute_script(
         '$.post(\"/study/Selection/StudentSelection\", {ScheduleId: ' + '\'' + param[-36:] + '\',}, null, "json")')
     time.sleep(0.3)
